@@ -18,30 +18,48 @@ def load_credentials(file_path):
 	except Exception as e:
 		raise e
 
-def generate_cat_art(words):
-	return """
-      ,_     _,
-      |\\\\___//|
-      |=6   6=|		-({}) 
-      \=._Y_.=/
-       )  `  (    ,
-      /       \  ((
-      |       |   ))
-     /| |   | |\_//
-jgs  \| |._.| |/-`
-      :.:   :.:
-""".format(words)
+def generate_cat_art(words, cat_type):
+	if cat_type == 1:
+		return """
+	      ,_     _,
+	      |\\\\___//|
+	      |=6   6=|		-({}) 
+	      \=._Y_.=/
+	       )  `  (    ,
+	      /       \  ((
+	      |       |   ))
+	     /| |   | |\_//
+	jgs  \| |._.| |/-`
+	      :.:   :.:
+	""".format(words)
+	elif cat_type == 2:
+		return """
+			 /\\___/\\
+			( o   o )	-({})
+			(  =^=  )
+			(        )
+			(         )
+			(          )))))))))))
+	""".format(words)
+	else:
+		raise Exception("Cat out of range!!!!")
+
+
 
 def reset_session():
-	session['cat_art'] = generate_cat_art("meow!")
+	session['cat_art'] = generate_cat_art("meow!", 1)
 	session['credentials'] = load_credentials("default.json")
 
 @app.route('/')
 def home():
 	if 'cat_art' not in session:
-		session['cat_art'] = generate_cat_art("meow!")
+		session['cat_art'] = generate_cat_art("meow!", 1)
 
-	return render_template('cat.html', cat_art=session['cat_art'])
+	greeting=""
+	if 'username' in session:
+		greeting = "Logged in as: {}".format(session['username'])
+
+	return render_template('cat.html', cat_art=session['cat_art'], greeting=greeting)
 
 @app.route('/login', methods=['GET', 'POST'])
 def do_login():
@@ -64,8 +82,9 @@ def do_login():
 def cat():
 	if request.method == 'POST':
 		try:
-			session['cat_art'] = generate_cat_art(request.form['input'].lower())
+			session['cat_art'] = generate_cat_art(request.form['input'].lower(), int(request.form['cat_type']))
 		except:
+			print("resetting!")
 			reset_session()
 
 	return home()
@@ -87,4 +106,4 @@ if __name__ == "__main__":
 	app.secret_key = os.urandom(12)
 	global g_credentials
 	g_credentials = load_credentials("users.json")
-	app.run(debug=True,host='0.0.0.0', port=4000)
+	app.run(debug=False, host='0.0.0.0', port=4000)

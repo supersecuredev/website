@@ -5,6 +5,7 @@
 
 {% block body %}
 
+{{greeting}}
 <xmp>{{ cat_art }}</xmp>
 <form action="/cat" method="POST">
 	<div class="cat">
@@ -15,6 +16,11 @@
 	<div class="control-group">
 					<input type="text" class="login-field" value="" placeholder="input speech here" name="input">
 	<label class="login-field-icon fui-user" for="cat say"></label></div>
+	Cat_type:
+	<select name="cat_type">
+		<option value="1">1</option>
+		<option value="2">2</option>
+	</select> 
 
 	<input type="submit" value="submit" class="btn btn-primary btn-large btn-block">
 
