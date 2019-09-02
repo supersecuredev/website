@@ -6,19 +6,50 @@ app = Flask(__name__)
 
 credentials = {'admin': 'password'}
 
+
+def generate_cat_art(words):
+	return """
+      ,_     _,
+      |\\\\___//|
+      |=6   6=|		-({}) 
+      \=._Y_.=/
+       )  `  (    ,
+      /       \  ((
+      |       |   ))
+     /| |   | |\_//
+jgs  \| |._.| |/-`
+      :.:   :.:
+""".format(words)
+
+
+cat_art = generate_cat_art("meow!")
+
+
 @app.route('/')
 def home():
-	if not session.get('logged_in'):
-		return render_template('login.html')
-	else:
-		return "Hello Boss!"
+	return render_template('cat.html', cat_art=cat_art)
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def do_admin_login():
-	if request.form['username'] in credentials and credentials[request.form['username']] == request.form['password']:
-		session['logged_in'] = True
+	if request.method == 'POST':
+
+		if request.form['username'] in credentials and credentials[request.form['username']] == request.form['password']:
+			session['logged_in'] = True
+		else:
+			flash('wrong password!')
+		return home()
 	else:
-		flash('wrong password!')
+		return render_template('login.html')
+
+@app.route('/cat', methods=['GET', 'POST'])
+def cat():
+	if request.method == 'POST':
+		global cat_art
+		try:
+			cat_art = generate_cat_art(request.form['input'].lower())
+		except:
+			cat_art = generate_cat_art("Uh Oh!")
+
 	return home()
 
 @app.route("/logout")
