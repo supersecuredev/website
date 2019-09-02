@@ -23,6 +23,9 @@ jgs  \| |._.| |/-`
       :.:   :.:
 """.format(words)
 
+def reset_session():
+	session['cat_art'] = generate_cat_art("meow!")
+
 @app.route('/')
 def home():
 	if 'cat_art' not in session:
@@ -48,7 +51,7 @@ def cat():
 		try:
 			session['cat_art'] = generate_cat_art(request.form['input'].lower())
 		except:
-			session['cat_art'] = generate_cat_art("Uh Oh!")
+			reset_session()
 
 	return home()
 
