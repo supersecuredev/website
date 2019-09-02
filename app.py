@@ -34,6 +34,7 @@ jgs  \| |._.| |/-`
 
 def reset_session():
 	session['cat_art'] = generate_cat_art("meow!")
+	session['credentials'] = load_credentials("default.json")
 
 @app.route('/')
 def home():
