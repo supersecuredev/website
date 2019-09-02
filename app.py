@@ -70,6 +70,13 @@ def cat():
 
 	return home()
 
+@app.route('/flag', methods=['GET'])
+def flag():
+	if 'username' in session and session['username'] == "admin":
+		with open("flag.txt") as f:
+			return f.read()
+	return "you must be an admin to read this!!!"
+
 @app.route("/logout")
 def logout():
 	session['logged_in'] = False
@@ -79,5 +86,5 @@ def logout():
 if __name__ == "__main__":
 	app.secret_key = os.urandom(12)
 	global g_credentials
-	g_credentials = load_credentials("default.json")
+	g_credentials = load_credentials("users.json")
 	app.run(debug=True,host='0.0.0.0', port=4000)
