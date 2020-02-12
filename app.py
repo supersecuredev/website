@@ -1,13 +1,11 @@
 from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
 
-
 import json
 import os
 
 app = Flask(__name__)
 
-global g_credentials
 g_credentials = {}
 
 def load_credentials(file_path):
@@ -102,8 +100,12 @@ def logout():
 	session.pop("username", None)
 	return home()
 
-if __name__ == "__main__":
+def main():
 	app.secret_key = os.urandom(12)
 	global g_credentials
 	g_credentials = load_credentials("users.json")
 	app.run(debug=False, host='0.0.0.0', port=4000)
+
+if __name__ == "__main__":
+	main()
+	
